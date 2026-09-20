@@ -28,6 +28,11 @@ public class Article {
         this.content = content;
     }
 
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     /*
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     위 애너테이션이 아래 기본 생성자를 자동을 생성하기 때문에 아래 기본생성자는 불필요

@@ -2,6 +2,7 @@ package me.shinsunyung.commitnote.controller;
 
 import me.shinsunyung.commitnote.dto.AddArticleRequest;
 import me.shinsunyung.commitnote.domain.Article;
+import me.shinsunyung.commitnote.dto.UpdateArticleRequest;
 import me.shinsunyung.commitnote.repository.BlogRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,15 +14,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.context.WebApplicationContext;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest // 테스트용 애플리케이션 컨텍스트
@@ -96,5 +97,84 @@ class BlogApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].content").value(content))
                 .andExpect(jsonPath("$[0].title").value(title));
+    }
+
+    @DisplayName("findArticle: 블로그 글 조회에 성공한다.")
+    @Test
+    public void findArticle() throws Exception {
+        // given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article saveArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        // when
+        final ResultActions resultActions = mockMvc.perform(get(url, saveArticle.getId()));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value(content))
+                .andExpect(jsonPath("$.title").value(title));
+    }
+
+    @DisplayName("deleteArticle: 블로그 글 삭제에 성공한다.")
+    @Test
+    public void deleteArticle() throws Exception {
+        // given
+        final String url = "/api/articles/{id}";
+        final String title = "title";
+        final String content = "content";
+
+        Article savedArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        // when
+        mockMvc.perform(delete(url, savedArticle.getId()))
+                .andExpect(status().isOk());
+
+
+        // then
+        List<Article> articles = blogRepository.findAll();
+
+        assertThat(articles).isEmpty();
+    }
+
+    @DisplayName("updateArticle: 블로그 글 수정에 성공한다.")
+    @Test
+    public void updateArticle() throws Exception {
+        // given
+        final String url = "/api/articles/{1}";
+        final String title = "title";
+        final String content = "content";
+
+        Article saveArticle = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        final String newTitle = "new Title";
+        final String newContent = "new Content";
+
+        UpdateArticleRequest request = new UpdateArticleRequest(newTitle, newContent);
+
+        // when
+        ResultActions result = mockMvc.perform(put(url, saveArticle.getId())
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        result.andExpect(status().isOk());
+
+        Article article = blogRepository.findById(saveArticle.getId()).get();
+
+        assertThat(article.getTitle()).isEqualTo(newTitle);
+        assertThat(article.getContent()).isEqualTo(newContent);
     }
 }
