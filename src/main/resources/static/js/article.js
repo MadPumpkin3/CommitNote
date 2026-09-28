@@ -49,3 +49,29 @@ if (modifyButton) {
             })
     })
 }
+
+// 등록 기능
+// [1] id가 create-btn인 엘리먼트
+const createButton = document.getElementById("create-btn");
+
+if (createButton) {
+    // [2] 클릭 이벤트가 감지되면 생성 API 요청
+    createButton.addEventListener("click", (event) => {
+        fetch("/api/articles", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title: document.getElementById("title").value,
+                content: document.getElementById("content").value,
+            }),
+        }).then((response) => {
+            if (!response.ok) {
+                throw new Error(`생성 요청 실패: ${response.status}`);
+            }
+            alert("등록 완료되었습니다.");
+            location.replace("/articles");
+        })
+    })
+}
