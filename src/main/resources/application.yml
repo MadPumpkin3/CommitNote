@@ -15,3 +15,7 @@ spring:
   h2: # H2 콘솔 활성화
     console:
       enabled: true
+
+  ai: # Open Ai API 정보 추가
+    openai:
+      api-key: ${OPENAI_API_KEY}
