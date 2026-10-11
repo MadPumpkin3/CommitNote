@@ -113,7 +113,7 @@ if (getSuggestionButton) {
             question: question
         })
 
-        fetch('/api/ai-suggestion', {
+        fetch('/api/ai-suggestions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,9 +135,13 @@ if (getSuggestionButton) {
                 if (data.suggestions && data.suggestions.length > 0) {
                     html += '<ul class="list-group">';
                     data.suggestions.forEach((suggestion, index) => {
-                        html += '<li class="list-group-item suggestion-item" style="cursor: pointer;"' +
-                            'data-suggestion="${suggestion.replace(/"/g, '&quot;')}" title="클릭하면 본문에 추가됩니다">' +
-                        `${suggestion} <small class="text-muted float-right">클릭하여 추가</small> </li>`;
+                        html += `<li class="list-group-item suggestion-item"
+                                style="cursor: pointer;"
+                                data-suggestion="${suggestion.replace(/"/g, '&quot;')}"
+                                title="클릭하면 본문에 추가됩니다">
+                                ${suggestion}
+                                <small class="text-muted float-right">클릭하여 추가</small>
+                        </li>`;
                     });
                     html += '</ul>';
                 }
@@ -149,3 +153,19 @@ if (getSuggestionButton) {
 }
 
 // [6] 제안 선택을 누르면 현재 내용 끝에 제안을 추가
+const suggestionContent = document.getElementById('ai-suggestion-content');
+if (suggestionContent) {
+    suggestionContent.addEventListener('click', function(e) {
+        const suggestionItem = e.target.closest('.suggestion-item');
+        if (suggestionItem) {
+            const suggestion = suggestionItem.getAttribute('data-suggestion');
+            const contentTextarea = document.getElementById('content');
+
+            const currentContent = contentTextarea.value;
+            const separator = currentContent && !currentContent.endsWith('\n') ? '\n\n' : '';
+            contentTextarea.value = currentContent + separator + suggestion;
+            $('#aiAssistModal').modal('hide');
+            contentTextarea.focus();
+        }
+    });
+}
