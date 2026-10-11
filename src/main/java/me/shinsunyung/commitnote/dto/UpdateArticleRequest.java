@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class UpdateArticleRequest {
-    private  String title;
-    private  String content;
+    private String title;
+    private String content;
+    private String imageUrl;
+
+    public UpdateArticleRequest(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
