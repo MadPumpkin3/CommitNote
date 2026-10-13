@@ -23,6 +23,9 @@
           <!-- || 기호와 함께 Posted on 이라는 텍스트와 붙이면 = '2099-99-31 23:11 Posted on' 같이 시간 알림 표시 가능 -->
           <div class="text-muted fst-italic mb-2" th:text="|Posted on ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}|"></div>
         </header>
+        <section class="mb-4" th:if="${article.imageUrl != null and article.imageUrl != ''}">
+          <img th:src="${article.imageUrl}" alt="게시글 이미지" class="img-fluid" style="max-width: 100%; height: auto;">
+        </section>
         <section class="mb-5">
           <p class="fs-5 mb-4" th:text="${article.content}"></p>
         </section>
