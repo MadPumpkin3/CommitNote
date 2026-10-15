@@ -22,7 +22,7 @@ if (imageUpload) {
 
         // [5] 이미지 업로드 요청
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('file', file);
 
         fetch('/api/upload', {
             method: 'POST',

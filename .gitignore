@@ -38,3 +38,6 @@ out/
 
 # Local credentials (never commit)
 /.local/
+
+# upload file
+/uploads
