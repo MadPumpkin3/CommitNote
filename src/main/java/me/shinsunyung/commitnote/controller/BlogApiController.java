@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.shinsunyung.commitnote.dto.*;
 import me.shinsunyung.commitnote.domain.Article;
 import me.shinsunyung.commitnote.service.BlogService;
+import me.shinsunyung.commitnote.service.ThumbnailGeneratorService;
 import me.shinsunyung.commitnote.service.WritingAssistantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class BlogApiController {
 
     private final BlogService blogService;
     private final WritingAssistantService writingAssistantService;
+    private final ThumbnailGeneratorService thumbnailGeneratorService;
 
     // HTTP 메서드가 POST일 때 전달받은 URL과 동일하면 메서드로 매핑
     @PostMapping("/api/articles")
@@ -71,6 +73,14 @@ public class BlogApiController {
     @PostMapping("/api/ai-suggestions")
     public ResponseEntity<WritingSuggestionResponse> writingAssist(@RequestBody WritingSuggestionRequest request) {
         WritingSuggestionResponse response = writingAssistantService.getWritingAssist(request);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @PostMapping("/api/ai-thumbnails")
+    public ResponseEntity<GeneratorThumbnailResponse> thumbnailGenerator(@RequestBody GeneratorThumbnailRequest request) {
+        GeneratorThumbnailResponse response = thumbnailGeneratorService.generatorThumbnail(request);
 
         return ResponseEntity.ok()
                 .body(response);
