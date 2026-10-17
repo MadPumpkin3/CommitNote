@@ -275,6 +275,9 @@ if (aiThumbnailButton) {
             // [5] 이미지 URL을 이미지 URL 입력란에 설정하고 미리보기 표시
             document.getElementById('image-url').value = data.imageUrl;
             displayImagePreview(data.imageUrl);
-        })
-    })
+        }).finally(() => {
+            loadingDiv.style.display = 'none';
+            aiThumbnailButton.disabled = false;
+        });
+    });
 }
