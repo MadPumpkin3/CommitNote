@@ -236,3 +236,45 @@ if (suggestionContent) {
         }
     });
 }
+
+// [1] id가 ai-thumbnail-btn인 엘리먼트
+const aiThumbnailButton = document.getElementById('ai-thumbnail-btn');
+if (aiThumbnailButton) {
+    aiThumbnailButton.addEventListener('click', async () => {
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+
+        // [2] 제목, 내용이 비어있으면 경고창 띄우기
+        if (!title.trim() && !content.trim()) {
+            alert('제목이나 내용을 먼저 입력해주세요.')
+            return;
+        }
+
+        // [3] 로딩 모달 표시
+        const loadingDiv = document.getElementById('ai-thumbnail-loading');
+        loadingDiv.style.display = 'block';
+        aiThumbnailButton.disabled = true;
+
+        // [4] AI 섬네일 생성 API 호출
+        fetch('/api/ai-thumbnails', {
+            method: 'POST',
+            body: JSON.stringify({
+                title: title,
+                content: content
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then((response) => {
+            if (!response.ok) {
+                alert('섬네일 생성에 실패했습니다.');
+                throw new Error();
+            }
+            return response.json();
+        }).then((data) => {
+            // [5] 이미지 URL을 이미지 URL 입력란에 설정하고 미리보기 표시
+            document.getElementById('image-url').value = data.imageUrl;
+            displayImagePreview(data.imageUrl);
+        })
+    })
+}
