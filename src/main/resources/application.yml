@@ -19,3 +19,7 @@ spring:
   ai: # Open Ai API 정보 추가
     openai:
       api-key: ${OPENAI_API_KEY}
+
+  jwt:
+    issuer: fpdjxpa37@gmail.com
+    secret_key: ${JWT_SECRET_KEY}
