@@ -20,4 +20,10 @@ public class UserService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .build()).getId();
     }
+
+    // 유저 검색 및 전달
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+    }
 }
