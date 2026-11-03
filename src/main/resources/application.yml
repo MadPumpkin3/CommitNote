@@ -20,6 +20,17 @@ spring:
     openai:
       api-key: ${OPENAI_API_KEY}
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
 jwt:
   issuer: fpdjxpa37@gmail.com
   secret-key: ${JWT_SECRET_KEY}
