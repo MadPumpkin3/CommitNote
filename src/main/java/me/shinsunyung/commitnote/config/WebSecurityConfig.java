@@ -18,6 +18,8 @@ import static org.springframework.boot.security.autoconfigure.web.servlet.PathRe
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
+    // OAuth2 설정을 위해 기존 JWT 설정 비활성화
+    /*
     // [1] 스프링 시큐리티 기능 비활성화
     @Bean
     public WebSecurityCustomizer configure() {
@@ -54,4 +56,5 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    */
 }
